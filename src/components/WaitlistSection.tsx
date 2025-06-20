@@ -46,7 +46,8 @@ const WaitlistSection = () => {
                   required
                 />
               </div>
-              <button type="submit" className="premium-button">
+              {/* CORRECTED LINE: Added 'group' class to the button */}
+              <button type="submit" className="premium-button group">
                 <span>Request Early Access</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
@@ -65,7 +66,8 @@ const WaitlistSection = () => {
               </div>
               <h3 className="text-3xl font-bold text-white">You're on the List.</h3>
               <p className="text-lg text-gray-300">Welcome to the future of credit. We'll be in touch.</p>
-              <a href="https://praedexa.com" target="_blank" rel="noopener noreferrer" className="premium-button inline-block w-auto px-8">
+              {/* CORRECTED LINE: Added 'group' class to the link for consistency */}
+              <a href="https://praedexa.com" target="_blank" rel="noopener noreferrer" className="premium-button group inline-block w-auto px-8">
                 Follow Progress on Praedexa
               </a>
             </div>
