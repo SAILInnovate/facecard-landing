@@ -21,7 +21,7 @@ const WaitlistSection = () => {
 
           <div className="flex justify-center">
             <a 
-              href="https://praedexa.com" 
+              href="https://praedexa.com/auth?signup=true" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="premium-button group inline-block w-auto px-10 py-5 text-lg"
