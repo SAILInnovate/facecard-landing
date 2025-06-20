@@ -1,45 +1,41 @@
 import React, { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useTexture } from '@react-three/drei';
-import { motion as motion3d } from 'framer-motion-3d'; // Use a different name to avoid conflict with standard framer-motion
-import { useMotionValue, useSpring } from 'framer-motion';
+// CORRECTED: Import 'motion' from the main framer-motion package
+import { motion } from 'framer-motion'; 
+import { useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { MotionValue } from 'framer-motion';
 
 // --- COMPONENT 1: The 3D Scene ---
-// This component lives INSIDE the Canvas.
-// It is SAFE to use R3F hooks like useTexture and useFrame here.
 const CardModel = ({ scrollYProgress }: { scrollYProgress: MotionValue<number> }) => {
   const meshRef = useRef<THREE.Mesh>(null!);
-  
-  // R3F HOOK: This is safe because we are inside the Canvas context.
   const texture = useTexture('/facecard-texture.jpg');
 
-  // R3F HOOK: This is also safe.
-  useFrame(() => {
-    // You can add frame-based animations here if needed
-  });
+  // We need to use useTransform here as Framer Motion's motion values can't be directly applied to R3F objects
+  // The motion.mesh component bridges this gap.
+  const scale = useTransform(scrollYProgress, [0, 0.2, 0.3, 0.8, 0.9], [0, 1.2, 1, 1, 1.2]);
+  const rotationX = useTransform(scrollYProgress, [0, 0.2], [Math.PI / 2, 0]);
+  const positionX = useTransform(scrollYProgress, [0.3, 0.8, 0.9], [window.innerWidth > 768 ? window.innerWidth / 4 : 0, window.innerWidth > 768 ? window.innerWidth / 4 : 0, 0]);
+  const positionY = useTransform(scrollYProgress, [0.3, 0.8], [window.innerHeight > 768 ? window.innerHeight / 4 : 0, window.innerHeight > 768 ? window.innerHeight / 4 : 0]);
 
   return (
-    <motion3d.mesh
+    // 'motion.mesh' is the 3D equivalent of 'motion.div'
+    <motion.mesh
       ref={meshRef}
-      scale={scrollYProgress.to([0, 0.2, 0.3, 0.8, 0.9], [0, 1.2, 1, 1, 1.2])}
-      rotation-x={scrollYProgress.to([0, 0.2], [Math.PI / 2, 0])}
-      position-x={scrollYProgress.to([0.3, 0.8, 0.9], [window.innerWidth > 768 ? window.innerWidth / 4 : 0, window.innerWidth > 768 ? window.innerWidth / 4 : 0, 0])}
-      position-y={scrollYProgress.to([0.3, 0.8], [window.innerHeight > 768 ? window.innerHeight / 4 : 0, window.innerHeight > 768 ? window.innerHeight / 4 : 0])}
+      scale={scale}
+      rotation-x={rotationX}
+      position-x={positionX}
+      position-y={positionY}
     >
       <planeGeometry args={[7.5, 12]} />
       <meshStandardMaterial map={texture} roughness={0.4} metalness={0.2} />
-    </motion3d.mesh>
+    </motion.mesh>
   );
 };
 
 
 // --- COMPONENT 2: The Main Wrapper ---
-// This is a standard React component that renders the Canvas.
-// It is NOT SAFE to use R3F hooks here.
 const Card3D = ({ scrollYProgress }: { scrollYProgress: MotionValue<number> }) => {
-  // NO R3F HOOKS (useTexture, useFrame, etc.) should be here.
-  
   const mouse = {
     x: useSpring(useMotionValue(0)),
     y: useSpring(useMotionValue(0)),
@@ -60,15 +56,12 @@ const Card3D = ({ scrollYProgress }: { scrollYProgress: MotionValue<number> }) =
   };
 
   return (
-    // This div is a DOM element. It can have standard event handlers.
     <div onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} className="w-full h-full">
       <Canvas camera={{ position: [0, 0, 15], fov: 25 }}>
-        {/* The Canvas creates the "3D world" context */}
         <ambientLight intensity={1.5} />
         <directionalLight position={[5, 5, 5]} intensity={1} />
         <directionalLight position={[-5, -5, 5]} intensity={0.5} color="#40E0D0" />
         
-        {/* We now render our 3D component INSIDE the Canvas */}
         <CardModel scrollYProgress={scrollYProgress} />
       </Canvas>
     </div>
