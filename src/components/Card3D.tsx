@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { useTransform } from 'framer-motion';
 import { MotionValue } from 'framer-motion';
 
-import cardTextureUrl from '../assets/assets/facecard-texture.jpg';
+import cardTextureUrl from '../assets/facecard-texture.jpg';
 import { useWindowSize } from '../hooks/useWindowSize';
 
 interface MouseProps {
