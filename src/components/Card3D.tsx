@@ -1,24 +1,28 @@
 import React, { useRef } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas } from '@react-three/fiber';
 import { useTexture } from '@react-three/drei';
 import { motion } from 'framer-motion'; 
 import { useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { MotionValue } from 'framer-motion';
 
-// STEP 1: Import the image directly. Vite will provide the correct public URL.
 import cardTextureUrl from '../assets/facecard-texture.jpg';
+
+// Import our new safe hook
+import { useWindowSize } from '../hooks/useWindowSize';
 
 // --- COMPONENT 1: The 3D Scene ---
 const CardModel = ({ scrollYProgress }: { scrollYProgress: MotionValue<number> }) => {
   const meshRef = useRef<THREE.Mesh>(null!);
-  
-  // STEP 2: Use the imported variable in the useTexture hook.
   const texture = useTexture(cardTextureUrl);
+  
+  // Safely get window dimensions using our hook
+  const { width, height } = useWindowSize();
 
+  // Now, use these safe dimensions in the transforms
   const scale = useTransform(scrollYProgress, [0, 0.2, 0.3, 0.8, 0.9], [0, 1.2, 1, 1, 1.2]);
   const rotationX = useTransform(scrollYProgress, [0, 0.2], [Math.PI / 2, 0]);
-  const positionX = useTransform(scrollYProgress, [0.3, 0.8, 0.9], [window.innerWidth > 768 ? window.innerWidth / 4 : 0, window.innerWidth > 768 ? window.innerWidth / 4 : 0, 0]);
-  const positionY = useTransform(scrollYProgress, [0.3, 0.8], [window.innerHeight > 768 ? window.innerHeight / 4 : 0, window.innerHeight > 768 ? window.innerHeight / 4 : 0]);
+  const positionX = useTransform(scrollYProgress, [0.3, 0.8, 0.9], [width > 768 ? width / 4 : 0, width > 768 ? width / 4 : 0, 0]);
+  const positionY = useTransform(scrollYProgress, [0.3, 0.8], [height > 768 ? height / 4 : 0, height > 768 ? height / 4 : 0]);
 
   return (
     <motion.mesh
