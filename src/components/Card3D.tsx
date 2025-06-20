@@ -1,25 +1,26 @@
 import React, { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useTexture } from '@react-three/drei';
-// CORRECTED: Import 'motion' from the main framer-motion package
 import { motion } from 'framer-motion'; 
 import { useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { MotionValue } from 'framer-motion';
 
+// STEP 1: Import the image directly. Vite will provide the correct public URL.
+import cardTextureUrl from '../assets/facecard-texture.jpg';
+
 // --- COMPONENT 1: The 3D Scene ---
 const CardModel = ({ scrollYProgress }: { scrollYProgress: MotionValue<number> }) => {
   const meshRef = useRef<THREE.Mesh>(null!);
-  const texture = useTexture('/facecard-texture.jpg');
+  
+  // STEP 2: Use the imported variable in the useTexture hook.
+  const texture = useTexture(cardTextureUrl);
 
-  // We need to use useTransform here as Framer Motion's motion values can't be directly applied to R3F objects
-  // The motion.mesh component bridges this gap.
   const scale = useTransform(scrollYProgress, [0, 0.2, 0.3, 0.8, 0.9], [0, 1.2, 1, 1, 1.2]);
   const rotationX = useTransform(scrollYProgress, [0, 0.2], [Math.PI / 2, 0]);
   const positionX = useTransform(scrollYProgress, [0.3, 0.8, 0.9], [window.innerWidth > 768 ? window.innerWidth / 4 : 0, window.innerWidth > 768 ? window.innerWidth / 4 : 0, 0]);
   const positionY = useTransform(scrollYProgress, [0.3, 0.8], [window.innerHeight > 768 ? window.innerHeight / 4 : 0, window.innerHeight > 768 ? window.innerHeight / 4 : 0]);
 
   return (
-    // 'motion.mesh' is the 3D equivalent of 'motion.div'
     <motion.mesh
       ref={meshRef}
       scale={scale}
