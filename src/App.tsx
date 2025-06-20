@@ -18,13 +18,16 @@ function App() {
     offset: ['start start', 'end end'],
   });
 
-  // Opacity for Hero Text
+  // CORRECTED: Move useTransform calls inside the component body
   const heroTextOpacity = useTransform(scrollYProgress, [0, 0.1, 0.2], [1, 1, 0]);
   const heroTextY = useTransform(scrollYProgress, [0, 0.2], [0, -100]);
-
-  // Opacity for sections
   const principlesOpacity = useTransform(scrollYProgress, [0.25, 0.35, 0.75, 0.85], [0, 1, 1, 0]);
   const waitlistOpacity = useTransform(scrollYProgress, [0.8, 1], [0, 1]);
+  const backgroundGradient = useTransform(
+    scrollYProgress,
+    [0, 0.3, 0.9],
+    ['linear-gradient(180deg, #20B2AA 0%, #0A0A0A 100%)', 'linear-gradient(180deg, #105955 0%, #0A0A0A 100%)', 'linear-gradient(180deg, #0A0A0A 0%, #0A0A0A 100%)']
+  );
 
   return (
     <div ref={containerRef} className="main-container h-screen w-screen overflow-y-scroll overflow-x-hidden relative">
@@ -34,13 +37,7 @@ function App() {
           {/* Background Gradient */}
           <motion.div 
             className="absolute inset-0"
-            style={{
-              background: useTransform(
-                scrollYProgress,
-                [0, 0.3, 0.9],
-                ['linear-gradient(180deg, #20B2AA 0%, #0A0A0A 100%)', 'linear-gradient(180deg, #105955 0%, #0A0A0A 100%)', 'linear-gradient(180deg, #0A0A0A 0%, #0A0A0A 100%)']
-              )
-            }}
+            style={{ background: backgroundGradient }}
           />
           <Starfield />
           
