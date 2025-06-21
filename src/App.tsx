@@ -4,9 +4,7 @@ import Card3D from './components/Card3D';
 import PrinciplesSection from './components/PrinciplesSection';
 import WaitlistSection from './components/WaitlistSection';
 
-// A component for the starfield background
 const Starfield = () => (
-  // z-0 puts it at the very back
   <div className="fixed inset-0 z-0">
     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-[0.03] animate-starfield"></div>
   </div>
@@ -29,9 +27,8 @@ function App() {
     mouse.y.set(y);
   };
 
-  // --- Animation Logic ---
-  const heroTextOpacity = useTransform(scrollYProgress, [0, 0.05, 0.15], [1, 1, 0]);
-  const heroTextY = useTransform(scrollYProgress, [0, 0.15], [0, -100]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.1, 0.2], [1, 1, 0]);
+  const heroY = useTransform(scrollYProgress, [0, 0.2], [0, -100]);
   
   const principlesOpacity = useTransform(scrollYProgress, [0.25, 0.35, 0.6, 0.7], [0, 1, 1, 0]);
   const principlesY = useTransform(scrollYProgress, [0.25, 0.35], [100, 0]);
@@ -52,41 +49,43 @@ function App() {
     >
       <Starfield />
       
-      {/* FIXED UI Layer - z-10 */}
-      <div className="fixed top-0 left-0 w-full h-screen pointer-events-none z-10">
+      {/* --- FIXED HERO SECTION (z-10) --- */}
+      {/* This layer holds the background, the card, AND the hero text. It will be covered by the scrolling content. */}
+      <motion.div 
+        className="fixed top-0 left-0 w-full h-screen pointer-events-none z-10"
+        style={{ opacity: heroOpacity, y: heroY }}
+      >
         <motion.div 
           className="absolute inset-0"
           style={{ background: backgroundGradient }}
         />
+        
+        {/* The 3D Card */}
         <Card3D scrollYProgress={scrollYProgress} mouse={mouse} />
-      </div>
 
-      {/* FIXED Text Layer - z-30 (highest) */}
-      <div className="fixed top-0 left-0 w-full h-screen pointer-events-none z-30">
-        <motion.div
-            className="absolute inset-0 flex flex-col items-center justify-center text-center"
-            style={{ opacity: heroTextOpacity, y: heroTextY }}
-        >
+        {/* The Hero Text */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
             <h1 className="text-5xl md:text-8xl font-orbitron font-black text-white subtle-glow">FaceCard</h1>
             <h2 className="text-xl md:text-3xl font-bold text-white mt-4">The New Standard in Credit.</h2>
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
 
-      {/* SCROLLING Content Layer - z-20 */}
+      {/* --- SCROLLING CONTENT SECTION (z-20) --- */}
+      {/* This layer sits ON TOP of the hero section and scrolls over it. */}
       <div className="relative z-20">
-        <div className="h-[120vh]" /> {/* Spacer for hero */}
+        <div className="h-[120vh]" />
         
         <motion.div style={{ opacity: principlesOpacity, y: principlesY }}>
           <PrinciplesSection />
         </motion.div>
         
-        <div className="h-[120vh]" /> {/* Spacer to scroll past principles */}
+        <div className="h-[120vh]" />
         
         <motion.div style={{ opacity: waitlistOpacity, y: waitlistY }}>
           <WaitlistSection />
         </motion.div>
 
-        <div className="h-[60vh]" /> {/* Spacer at the very bottom */}
+        <div className="h-[60vh]" />
       </div>
     </main>
   );
