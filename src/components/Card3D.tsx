@@ -1,79 +1,57 @@
 import React, { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { RoundedBox, Stars } from '@react-three/drei';
-import { MathUtils, PointLight, Color } from 'three';
+import { MathUtils, CylinderGeometry, Mesh, PointLight } from 'three';
 
-// --- This component is PURE React Three Fiber ---
-interface CardModelProps {
-  scroll: number;
+// --- The "Data Spire" Visualization ---
+interface SpireProps {
+  scroll: number; // A simple number from 0 to 1
 }
 
-const Monolith = ({ scroll }: CardModelProps) => {
-  const groupRef = useRef<THREE.Group>(null!);
+const DataSpire = ({ scroll }: SpireProps) => {
+  const meshRef = useRef<Mesh<CylinderGeometry>>(null!);
 
-  useFrame((state, delta) => {
-    if (!groupRef.current) return;
+  // The spire's height will grow based on the scroll position
+  const height = Math.max(0.01, Math.min(scroll / 0.2, 1) * 20);
 
-    // --- Animation Calculations ---
-    const targetRotationY = (1 - Math.min(scroll / 0.15, 1)) * (Math.PI / 2);
-    groupRef.current.rotation.y = MathUtils.lerp(groupRef.current.rotation.y, targetRotationY, delta * 5);
+  // We need to re-create the geometry when the height changes
+  const geometry = useMemo(() => new CylinderGeometry(1, 1.5, height, 32, 5, true), [height]);
 
-    const targetScale = 1 + (1 - Math.min(scroll / 0.15, 1)) * 1.5;
-    groupRef.current.scale.set(targetScale, targetScale, targetScale);
-    
-    const time = state.clock.getElapsedTime();
-    groupRef.current.position.y = Math.cos(time * 0.7) * 0.1;
+  // Animate the texture to create the feeling of data flowing upwards
+  useFrame((state) => {
+    if (meshRef.current && meshRef.current.material.map) {
+      const time = state.clock.getElapsedTime();
+      meshRef.current.material.map.offset.y = -time * 0.1;
+    }
   });
 
   return (
-    <group ref={groupRef}>
-      {/* Main Body */}
-      <RoundedBox args={[7.5, 12, 0.5]} radius={0.25}>
-        <meshStandardMaterial color="#222831" metalness={0.8} roughness={0.2} />
-      </RoundedBox>
-      {/* Inset Panel */}
-      <RoundedBox args={[7, 11.5, 0.2]} radius={0.2} position-z={0.2}>
-        <meshStandardMaterial color="#111111" metalness={0.5} roughness={0.4} />
-      </RoundedBox>
-
-      {/* --- The NEW Energy Core --- */}
-      {/* A thin, recessed, glowing line */}
-      <mesh position={[0, 4, 0.31]}>
-        <boxGeometry args={[2.5, 0.1, 0.1]} />
-        <meshBasicMaterial color="#40E0D0" toneMapped={false} />
-      </mesh>
-    </group>
+    <mesh ref={meshRef} geometry={geometry} position-y={height / 2}>
+      <meshStandardMaterial
+        color="#40E0D0"
+        emissive="#00FFFF" // Makes it glow from within
+        emissiveIntensity={0.2}
+        transparent
+        opacity={0.8}
+        roughness={0.2}
+        metalness={0.5}
+        wireframe // Gives it that "data" look
+      />
+    </mesh>
   );
 };
 
-const Effects = ({ scroll }: { scroll: number }) => {
+// A component for the orbiting mouse light
+const OrbitingLight = ({ mouse }: { mouse: { x: number, y: number }}) => {
     const lightRef = useRef<PointLight>(null!);
-
-    // Animate the eclipse light
+    
     useFrame(() => {
         if (lightRef.current) {
-            lightRef.current.intensity = MathUtils.lerp(lightRef.current.intensity, Math.min(scroll / 0.1, 1) * 50, 0.1);
+            lightRef.current.position.x = mouse.x * 20;
+            lightRef.current.position.y = 10 + mouse.y * 10;
         }
     });
 
-    return (
-        <>
-            {/* The Eclipse Light */}
-            <pointLight ref={lightRef} position={[0, 0, 5]} color="#40E0D0" distance={20} />
-            
-            {/* The "Hopeful" God Rays */}
-            <motion.group animate={{ y: [10, -10], opacity: [0, 0.5, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}>
-                <rectAreaLight
-                    width={10}
-                    height={30}
-                    intensity={Math.min(scroll / 0.12, 1) * 3}
-                    color="#20B2AA"
-                    position={[0, 0, 10]}
-                    rotation-z={-Math.PI / 4}
-                />
-            </motion.group>
-        </>
-    );
+    return <pointLight ref={lightRef} position={[0, 10, 10]} intensity={50} color="#FFFFFF" distance={50} />;
 };
 
 interface Card3DProps {
@@ -82,29 +60,20 @@ interface Card3DProps {
 }
 
 const Card3D = ({ scroll, mouse }: Card3DProps) => {
-  const sceneRef = useRef<THREE.Group>(null!);
-
-  // Mouse parallax effect
-  useFrame(() => {
-    if (sceneRef.current) {
-      sceneRef.current.rotation.y = MathUtils.lerp(sceneRef.current.rotation.y, mouse.x * 0.1, 0.1);
-      sceneRef.current.rotation.x = MathUtils.lerp(sceneRef.current.rotation.x, -mouse.y * 0.1, 0.1);
-    }
-  });
-
   return (
     <div className="w-full h-full">
-      <Canvas orthographic camera={{ zoom: 40, position: [0, 0, 100] }}>
+      <Canvas camera={{ position: [25, 10, 25], fov: 50 }}>
         <ambientLight intensity={0.5} />
-        <directionalLight position={[10, 10, 10]} intensity={1} />
+        <directionalLight position={[10, 10, 0]} intensity={1.5} />
         
-        {/* The Starfield from @react-three/drei */}
-        <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
+        {/* The Base Disc */}
+        <mesh rotation-x={-Math.PI / 2}>
+            <cylinderGeometry args={[2, 2, 0.5, 64]} />
+            <meshStandardMaterial color="#40E0D0" emissive="#00FFFF" emissiveIntensity={0.5} toneMapped={false} />
+        </mesh>
 
-        <group ref={sceneRef}>
-            <Monolith scroll={scroll} />
-            <Effects scroll={scroll} />
-        </group>
+        <DataSpire scroll={scroll} />
+        <OrbitingLight mouse={mouse} />
       </Canvas>
     </div>
   );
