@@ -1,67 +1,97 @@
 import React, { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { useTexture } from '@react-three/drei';
-// 1. Import MathUtils from the core 'three' library
-import { MathUtils } from 'three';
+// We need RoundedBox for our new object
+import { RoundedBox } from '@react-three/drei';
+import { motion } from 'framer-motion';
+import { useScroll, useTransform } from 'framer-motion';
 
-import cardTextureUrl from '../assets/facecard-texture.jpg';
+// This component now creates a 3D object from scratch
+const CardModel = () => {
+  // We use a <group> to hold all the pieces of our object
+  // so we can animate them together as one unit.
+  const groupRef = useRef<THREE.Group>(null!);
+  const { scrollYProgress } = useScroll();
+  
+  // --- Animation Logic ---
+  const rotationY = useTransform(scrollYProgress, [0, 0.15], [Math.PI / 2, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.15], [2.5, 1]);
 
-// This component now takes a simple 'scroll' number as a prop
-interface CardModelProps {
-  scroll: number;
-}
-
-const CardModel = ({ scroll }: CardModelProps) => {
-  const meshRef = useRef<THREE.Mesh>(null!);
-  const texture = useTexture(cardTextureUrl);
-
-  // useFrame is the core animation loop from react-three-fiber
-  useFrame((state, delta) => {
-    if (!meshRef.current) return;
-
-    // --- We manually calculate the animations based on the scroll value ---
-    
-    // Eclipse Reveal: Rotate from edge-on to face-on
-    const targetRotationY = (1 - Math.min(scroll / 0.15, 1)) * (Math.PI / 2);
-    // 2. Use the correctly imported MathUtils.lerp
-    meshRef.current.rotation.y = MathUtils.lerp(meshRef.current.rotation.y, targetRotationY, delta * 5);
-
-    // Scale from close-up to normal
-    const targetScale = 1 + (1 - Math.min(scroll / 0.15, 1)) * 1.5;
-    meshRef.current.scale.set(targetScale, targetScale, targetScale);
-
-    // Subtle float animation
-    const time = state.clock.getElapsedTime();
-    meshRef.current.position.y = Math.cos(time * 0.7) * 0.1;
+  useFrame((state) => {
+    if (groupRef.current) {
+      const time = state.clock.getElapsedTime();
+      groupRef.current.rotation.z = Math.sin(time * 0.5) * 0.05;
+      groupRef.current.position.y = Math.cos(time * 0.7) * 0.1;
+    }
   });
 
   return (
-    <mesh ref={meshRef}>
-      <planeGeometry args={[7.5, 12]} />
-      <meshStandardMaterial map={texture} metalness={0.6} roughness={0.3} />
-    </mesh>
+    <motion.group
+      ref={groupRef}
+      rotation-y={rotationY}
+      scale={scale}
+    >
+      {/* 1. The Main Body: A dark, metallic slab */}
+      <RoundedBox args={[7.5, 12, 0.5]} radius={0.25}>
+        <meshStandardMaterial 
+          color="#222831" // Dark gunmetal color
+          metalness={0.8} 
+          roughness={0.2} 
+        />
+      </RoundedBox>
+
+      {/* 2. The Inset Panel: A matte black front face */}
+      <RoundedBox 
+        args={[7, 11.5, 0.2]} // Slightly smaller
+        radius={0.2} 
+        position-z={0.2} // Pushed slightly forward
+      >
+        <meshStandardMaterial 
+          color="#111111" 
+          metalness={0.5} 
+          roughness={0.4} 
+        />
+      </RoundedBox>
+
+      {/* 3. The Glowing Core: A soft cyan light */}
+      <mesh position={[0, 4, 0.4]}>
+        <sphereGeometry args={[0.3, 16, 16]} />
+        <meshBasicMaterial 
+          color="#40E0D0" 
+          toneMapped={false} // Makes the glow ignore scene lighting
+        />
+      </mesh>
+    </motion.group>
   );
 };
 
-// The props for the main component
-interface Card3DProps {
-  scroll: number;
-}
+// The Eclipse Light remains the same
+const EclipseLight = () => {
+    const { scrollYProgress } = useScroll();
+    const intensity = useTransform(scrollYProgress, [0.01, 0.1], [0, 50]); // Increased intensity for metallic reflections
+    const scale = useTransform(scrollYProgress, [0, 0.1], [0.5, 5]);
 
-const Card3D = ({ scroll }: Card3DProps) => {
+    return (
+        <motion.pointLight 
+            position={[0, 0, 5]} // Moved light forward to catch the front face
+            color="#40E0D0" 
+            distance={20}
+            intensity={intensity}
+            scale={scale}
+        />
+    );
+};
+
+// The main component remains structurally the same
+const Card3D = () => {
   return (
     <div className="w-full h-full">
       <Canvas orthographic camera={{ zoom: 40, position: [0, 0, 100] }}>
-        <ambientLight intensity={0.2} />
-        <directionalLight position={[5, 5, 5]} intensity={0.5} />
-        {/* The Eclipse light is also animated manually */}
-        <pointLight
-            position={[0, 0, -2]} 
-            color="#40E0D0" 
-            distance={10}
-            intensity={Math.min(scroll / 0.1, 1) * 25}
-        />
-        <CardModel scroll={scroll} />
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[10, 10, 10]} intensity={1} />
+        
+        <CardModel />
+        <EclipseLight />
+
       </Canvas>
     </div>
   );
