@@ -20,6 +20,7 @@ const WaitlistSection = () => {
           </p>
 
           <div className="flex justify-center">
+            {/* Updated Link to go directly to signup */}
             <a 
               href="https://praedexa.com/auth?signup=true" 
               target="_blank" 
