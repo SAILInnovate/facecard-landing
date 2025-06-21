@@ -5,7 +5,7 @@ import PrinciplesSection from './components/PrinciplesSection';
 import WaitlistSection from './components/WaitlistSection';
 
 const Starfield = () => (
-  <div className="fixed inset-0 z-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-[0.03] animate-starfield"></div>
+    <div className="fixed inset-0 z-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-[0.03] animate-starfield"></div>
 );
 
 function App() {
@@ -47,7 +47,6 @@ function App() {
           className="absolute inset-0"
           style={{ background: backgroundGradient }}
         />
-        <Starfield />
         
         <Card3D scroll={scrollValue} mouse={mousePosition} />
 
