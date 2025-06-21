@@ -18,13 +18,11 @@ interface Card3DProps {
   mouse: MouseProps;
 }
 
-// --- The 3D Scene Component ---
 const CardModel = ({ scrollYProgress, mouse }: Card3DProps) => {
   const meshRef = useRef<THREE.Mesh>(null!);
   const texture = useTexture(cardTextureUrl);
   const { width, height } = useWindowSize();
 
-  // Apply mouse rotation on every frame
   useFrame(() => {
     if (meshRef.current) {
       meshRef.current.rotation.y = mouse.x.get() * 0.4;
@@ -32,12 +30,15 @@ const CardModel = ({ scrollYProgress, mouse }: Card3DProps) => {
     }
   });
 
-  // --- Animation Logic ---
   const scale = useTransform(scrollYProgress, [0, 0.1, 0.3, 0.8], [1, 1.2, 1, 1]);
   const rotationX = useTransform(scrollYProgress, [0, 0.1], [0, -Math.PI / 12]);
   const positionX = useTransform(scrollYProgress, [0.3, 0.8], [0, width > 768 ? width / 4.5 : 0]);
   const positionY = useTransform(scrollYProgress, [0.3, 0.8], [0, height > 768 ? height / 4.5 : 0]);
-  const opacity = useTransform(scrollYProgress, [0, 0.05, 0.8, 0.9], [0, 1, 1, 0]);
+  
+  // --- THIS IS THE FIX ---
+  // The opacity now starts at 1, making the card visible on load.
+  // It fades out at the end of the scroll.
+  const opacity = useTransform(scrollYProgress, [0, 0.8, 0.9], [1, 1, 0]);
 
   return (
     <motion.mesh
@@ -54,11 +55,9 @@ const CardModel = ({ scrollYProgress, mouse }: Card3DProps) => {
   );
 };
 
-// --- The Canvas Wrapper Component ---
 const Card3D = ({ scrollYProgress, mouse }: Card3DProps) => {
   return (
     <div className="w-full h-full">
-      {/* Use an Orthographic camera with zoom for precise scaling control */}
       <Canvas orthographic camera={{ zoom: 40, position: [0, 0, 100] }}>
         <ambientLight intensity={1.5} />
         <directionalLight position={[10, 10, 10]} intensity={1} />
