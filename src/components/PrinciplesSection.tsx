@@ -1,87 +1,85 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React from 'react';
+import { motion } from 'framer-motion';
 import { GatewayNode } from './icons/GatewayNode';
 import { GrowthMatrix } from './icons/GrowthMatrix';
 import { TrustNexus } from './icons/TrustNexus';
 
 const principles = [
   {
-    id: 1,
     Icon: GatewayNode,
-    title: "Democratizing Credit Access",
-    description: "Break the credit catch-22 with peer-to-peer vouching and micro-loans that build real credit history.",
-    position: "top-0 left-1/2 -translate-x-1/2",
+    headline: "Access, Redefined",
+    description: "We're replacing outdated credit checks with a system built on trust, providing a real pathway to a strong credit history.",
   },
   {
-    id: 2,
     Icon: GrowthMatrix,
-    title: "Gamified Financial Literacy",
-    description: "Learn while you earn with interactive lessons, rewards, and risk-free credit simulations.",
-    position: "bottom-0 left-0",
+    headline: "Intelligence, Rewarded",
+    description: "Master your finances with interactive simulations. Every step you take to improve your financial literacy earns you real rewards.",
   },
   {
-    id: 3,
     Icon: TrustNexus,
-    title: "Community-Driven Finance",
-    description: "Connect with a supportive network that celebrates your financial journey and success.",
-    position: "bottom-0 right-0",
+    headline: "Community, at the Core",
+    description: "Connect with a network that champions your success, all within a transparent, ethical framework with no hidden fees.",
   }
 ];
 
-const textVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' }},
-    exit: { opacity: 0, y: -20, transition: { duration: 0.3, ease: 'easeIn' }},
+const cardVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.2,
+      duration: 0.8,
+      ease: 'easeOut',
+    },
+  }),
 };
 
 const PrinciplesSection = () => {
-  const [activePrinciple, setActivePrinciple] = useState(principles[0]);
-
   return (
-    <div className="relative py-32 px-4 flex flex-col items-center justify-center min-h-[120vh]">
-      
-      {/* Central Text Area */}
-      <div className="w-full max-w-2xl text-center h-48 mb-24 md:mb-32">
-        <AnimatePresence mode="wait">
+    <div className="relative z-10 py-32 px-4">
+      <div className="max-w-7xl mx-auto">
+        <motion.div 
+          className="text-center mb-20"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.8 }}
+        >
+          <h2 className="text-4xl md:text-6xl font-orbitron font-bold text-white subtle-glow">
+            Built for a Fairer Financial Future
+          </h2>
+          <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mt-6 leading-relaxed">
+            Three foundational principles that redefine how credit should work.
+          </p>
+        </motion.div>
+        
+        <div className="grid lg:grid-cols-3 gap-10">
+          {principles.map((principle, index) => (
             <motion.div
-                key={activePrinciple.id}
-                variants={textVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
+              key={index}
+              className="bg-gradient-to-br from-gray-900 to-gray-800 backdrop-blur-sm border border-gray-700/50 rounded-3xl p-8 text-center shadow-lg"
+              custom={index}
+              variants={cardVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.3 }}
+              whileHover={{ scale: 1.02, boxShadow: "0px 10px 20px rgba(0,0,0,0.2)" }}
             >
-                <h2 className="text-4xl md:text-5xl font-orbitron font-bold text-white subtle-glow mb-6">
-                    {activePrinciple.title}
-                </h2>
-                <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
-                    {activePrinciple.description}
-                </p>
+              <div className="flex justify-center mb-6">
+                <div className="w-20 h-20 bg-gray-800 rounded-2xl flex items-center justify-center border border-gray-700">
+                  <principle.Icon className="w-10 h-10 text-brand-cyan" />
+                </div>
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-4 tracking-wide">
+                {principle.headline}
+              </h3>
+              <p className="text-gray-400 leading-relaxed">
+                {principle.description}
+              </p>
             </motion.div>
-        </AnimatePresence>
-      </div>
-      
-      {/* Interactive Constellation */}
-      <div className="relative w-full max-w-lg h-80 md:h-96 constellation-wrapper">
-        {/* Connecting Lines */}
-        <div className="constellation-line" style={{ top: '22%', left: '26%', width: '48%', transform: 'rotate(120deg)' }} />
-        <div className="constellation-line" style={{ top: '22%', right: '26%', width: '48%', transform: 'rotate(60deg)' }} />
-        <div className="constellation-line" style={{ bottom: '15%', left: '0', width: '100%' }} />
-
-        {principles.map((principle) => (
-          <motion.div
-            key={principle.id}
-            className={`absolute ${principle.position}`}
-            onMouseEnter={() => setActivePrinciple(principle)}
-            initial={{ opacity: 0, scale: 0.5 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 * principle.id }}
-            viewport={{ once: true, amount: 0.8 }}
-          >
-            <div className="constellation-orb">
-                <principle.Icon className="icon" />
-            </div>
-          </motion.div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
