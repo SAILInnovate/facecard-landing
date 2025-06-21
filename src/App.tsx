@@ -47,7 +47,7 @@ function App() {
           className="absolute inset-0"
           style={{ background: backgroundGradient }}
         />
-        {/* We can remove the old Starfield since the 3D canvas now has a better one */}
+        <Starfield />
         
         <Card3D scroll={scrollValue} mouse={mousePosition} />
 
