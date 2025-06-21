@@ -5,21 +5,10 @@
 @tailwind utilities;
 
 body {
-  background-color: #0A0A0A;
-  color: #E5E7EB;
-  font-family: 'Inter', sans-serif;
+  @apply bg-brand-dark text-gray-200 font-inter;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-.main-container::-webkit-scrollbar {
-  display: none;
-}
-
-.main-container {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
 }
 
 .subtle-glow {
@@ -29,23 +18,11 @@ body {
 }
 
 .premium-button {
-  width: 100%;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  border-radius: 0.75rem;
-  color: #000000;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
+  @apply w-full py-4 rounded-xl text-black font-semibold flex items-center justify-center space-x-2 transition-all;
   background: linear-gradient(135deg, #40E0D0 0%, #20B2AA 100%);
   box-shadow:
     0 8px 32px rgba(64, 224, 208, 0.3),
-    inset Nx0 1px 0 rgba(255, 255, 255, 0.2);
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
   position: relative;
   overflow: hidden;
 }
@@ -65,10 +42,48 @@ body {
   left: 100%;
 }
 
+/* --- THIS IS THE CORRECTED BLOCK --- */
 .premium-button:hover {
   box-shadow:
     0 12px 40px rgba(64, 224, 208, 0.5),
     0 0 60px rgba(64, 224, 208, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  /* The transform property is now its own rule with a semicolon */
   transform: translateY(-3px);
+}
+
+/* --- STYLES FOR THE CONSTELLATION --- */
+
+.constellation-orb {
+  @apply w-24 h-24 md:w-32 md:h-32 rounded-full flex items-center justify-center transition-all duration-500 ease-in-out cursor-pointer;
+  background: radial-gradient(circle, rgba(10, 10, 10, 0.8) 0%, rgba(10, 10, 10, 0) 70%);
+  border: 1px solid rgba(64, 224, 208, 0.2);
+  backdrop-filter: blur(5px);
+}
+
+.constellation-orb:hover {
+  transform: scale(1.1);
+  border-color: rgba(64, 224, 208, 0.8);
+  box-shadow: 0 0 30px rgba(64, 224, 208, 0.3);
+}
+
+.constellation-orb .icon {
+  @apply w-10 h-10 md:w-12 md:h-12 text-brand-cyan transition-all duration-300;
+}
+
+.constellation-orb:hover .icon {
+  filter: drop-shadow(0 0 10px #40E0D0);
+  transform: scale(1.05);
+}
+
+.constellation-line {
+  position: absolute;
+  background: linear-gradient(90deg, transparent, rgba(64, 224, 208, 0.3), transparent);
+  height: 1px;
+  transform-origin: left center;
+  transition: background 0.5s ease-in-out;
+}
+
+.constellation-wrapper:hover .constellation-line {
+    background: linear-gradient(90deg, transparent, rgba(64, 224, 208, 0.8), transparent);
 }
