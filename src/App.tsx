@@ -12,15 +12,14 @@ function App() {
   const { scrollYProgress } = useScroll();
   const [scrollValue, setScrollValue] = useState(0);
 
-  // This useEffect listens to changes in scrollYProgress and updates our state
-  // This is how we pass the value down to the non-motion component
+  // This is the bridge between Framer Motion and our Pure R3F component
   useEffect(() => {
     return scrollYProgress.onChange((latest) => {
       setScrollValue(latest);
     });
   }, [scrollYProgress]);
 
-
+  // Animation logic for 2D elements
   const heroOpacity = useTransform(scrollYProgress, [0, 0.08], [1, 0]);
   const principlesOpacity = useTransform(scrollYProgress, [0.3, 0.4, 0.6, 0.7], [0, 1, 1, 0]);
   const principlesY = useTransform(scrollYProgress, [0.3, 0.4], [100, 0]);
@@ -34,15 +33,14 @@ function App() {
 
   return (
     <main className="relative bg-brand-dark">
-      
       <div className="fixed top-0 left-0 w-full h-screen pointer-events-none z-10">
         <motion.div 
           className="absolute inset-0"
           style={{ background: backgroundGradient }}
         />
         <Starfield />
-        
-        {/* We pass the simple scrollValue number as a prop */}
+
+        {/* We pass the simple scrollValue number, not a MotionValue */}
         <Card3D scroll={scrollValue} />
 
         <motion.div 
