@@ -1,21 +1,25 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GatewayNode } from './icons/GatewayNode';
+// We'll use a new, more fitting icon for "Stewarding"
+import { ShieldCheck } from 'lucide-react'; 
 import { GrowthMatrix } from './icons/GrowthMatrix';
 import { TrustNexus } from './icons/TrustNexus';
 
 const principles = [
   {
     id: 1,
-    Icon: GatewayNode,
-    title: "Democratizing Credit Access",
-    description: "Break the credit catch-22 with peer-to-peer vouching and micro-loans that build real credit history.",
+    // Using a "Shield Check" icon to represent protection, stewardship, and trustworthiness.
+    Icon: ShieldCheck, 
+    // THIS IS THE NEW HEADLINE
+    title: "Stewarding, Saving, Salvation", 
+    // This description is rephrased to match the new headline's tone.
+    description: "Build your financial foundation on a platform rooted in faith. We provide the tools for responsible stewardship and a pathway to financial peace.", 
     position: "top-0 left-1/2 -translate-x-1/2",
   },
   {
     id: 2,
     Icon: GrowthMatrix,
-    title: "Gamified Financial Literacy",
+    title: "Intelligence, Rewarded",
     description: "Learn while you earn with interactive lessons, rewards, and risk-free credit simulations.",
     position: "bottom-0 left-0",
   },
@@ -39,8 +43,6 @@ const PrinciplesSection = () => {
 
   return (
     <div className="relative py-32 px-4 flex flex-col items-center justify-center min-h-[120vh]">
-      
-      {/* Central Text Area */}
       <div className="w-full max-w-2xl text-center h-48 mb-24 md:mb-32">
         <AnimatePresence mode="wait">
             <motion.div
@@ -60,9 +62,7 @@ const PrinciplesSection = () => {
         </AnimatePresence>
       </div>
       
-      {/* Interactive Constellation */}
       <div className="relative w-full max-w-lg h-80 md:h-96 constellation-wrapper">
-        {/* Connecting Lines */}
         <div className="constellation-line" style={{ top: '22%', left: '26%', width: '48%', transform: 'rotate(120deg)' }} />
         <div className="constellation-line" style={{ top: '22%', right: '26%', width: '48%', transform: 'rotate(60deg)' }} />
         <div className="constellation-line" style={{ bottom: '15%', left: '0', width: '100%' }} />
@@ -78,6 +78,7 @@ const PrinciplesSection = () => {
             viewport={{ once: true, amount: 0.8 }}
           >
             <div className="constellation-orb">
+                {/* We need to handle the new icon component */}
                 <principle.Icon className="icon" />
             </div>
           </motion.div>
