@@ -11,15 +11,21 @@ const Starfield = () => (
 function App() {
   const { scrollYProgress } = useScroll();
   const [scrollValue, setScrollValue] = useState(0);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
-  // This is the bridge between Framer Motion and our Pure R3F component
   useEffect(() => {
-    return scrollYProgress.onChange((latest) => {
-      setScrollValue(latest);
-    });
+    return scrollYProgress.onChange((latest) => setScrollValue(latest));
   }, [scrollYProgress]);
 
-  // Animation logic for 2D elements
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const { clientX, clientY, currentTarget } = e;
+    const { width, height } = currentTarget.getBoundingClientRect();
+    setMousePosition({
+      x: (clientX / width) - 0.5,
+      y: (clientY / height) - 0.5,
+    });
+  };
+
   const heroOpacity = useTransform(scrollYProgress, [0, 0.08], [1, 0]);
   const principlesOpacity = useTransform(scrollYProgress, [0.3, 0.4, 0.6, 0.7], [0, 1, 1, 0]);
   const principlesY = useTransform(scrollYProgress, [0.3, 0.4], [100, 0]);
@@ -32,16 +38,18 @@ function App() {
   );
 
   return (
-    <main className="relative bg-brand-dark">
+    <main 
+      onMouseMove={handleMouseMove}
+      className="relative bg-brand-dark"
+    >
       <div className="fixed top-0 left-0 w-full h-screen pointer-events-none z-10">
         <motion.div 
           className="absolute inset-0"
           style={{ background: backgroundGradient }}
         />
-        <Starfield />
-
-        {/* We pass the simple scrollValue number, not a MotionValue */}
-        <Card3D scroll={scrollValue} />
+        {/* We can remove the old Starfield since the 3D canvas now has a better one */}
+        
+        <Card3D scroll={scrollValue} mouse={mousePosition} />
 
         <motion.div 
           className="absolute inset-0 flex flex-col items-center justify-center text-center"
