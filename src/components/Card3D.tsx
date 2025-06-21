@@ -1,6 +1,8 @@
 import React, { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { useTexture, lerp } from '@react-three/drei'; // We will use lerp for smooth animation
+import { useTexture } from '@react-three/drei';
+// 1. Import MathUtils from the core 'three' library
+import { MathUtils } from 'three';
 
 import cardTextureUrl from '../assets/facecard-texture.jpg';
 
@@ -21,8 +23,8 @@ const CardModel = ({ scroll }: CardModelProps) => {
     
     // Eclipse Reveal: Rotate from edge-on to face-on
     const targetRotationY = (1 - Math.min(scroll / 0.15, 1)) * (Math.PI / 2);
-    // Smooth the rotation using lerp (linear interpolation) for a less jerky feel
-    meshRef.current.rotation.y = lerp(meshRef.current.rotation.y, targetRotationY, delta * 5);
+    // 2. Use the correctly imported MathUtils.lerp
+    meshRef.current.rotation.y = MathUtils.lerp(meshRef.current.rotation.y, targetRotationY, delta * 5);
 
     // Scale from close-up to normal
     const targetScale = 1 + (1 - Math.min(scroll / 0.15, 1)) * 1.5;
