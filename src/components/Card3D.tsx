@@ -1,24 +1,19 @@
 import React, { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useTexture } from '@react-three/drei';
-import { motion } from 'framer-motion-3d';
-import { useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
+// THIS IS THE CORRECTED IMPORT. We get 'motion' from the main package.
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 import cardTextureUrl from '../assets/facecard-texture.jpg';
 
 const CardModel = () => {
   const meshRef = useRef<THREE.Mesh>(null!);
   const texture = useTexture(cardTextureUrl);
-  const { scrollYProgress } = useScroll(); // useScroll inside the component that needs it
+  const { scrollYProgress } = useScroll();
   
-  // Animate the card's rotation based on scroll progress for the "eclipse" reveal
-  // It starts edge-on (Math.PI / 2) and rotates to face the camera (0)
   const rotationY = useTransform(scrollYProgress, [0, 0.15], [Math.PI / 2, 0]);
-
-  // Animate the scale. It starts large (close-up) and shrinks to normal size
   const scale = useTransform(scrollYProgress, [0, 0.15], [2.5, 1]);
 
-  // A subtle "drift" animation to make it feel like it's floating
   useFrame((state) => {
     if (meshRef.current) {
       const time = state.clock.getElapsedTime();
@@ -28,6 +23,7 @@ const CardModel = () => {
   });
 
   return (
+    // We use motion.mesh, which Framer Motion provides for 3D objects.
     <motion.mesh
       ref={meshRef}
       rotation-y={rotationY}
@@ -39,14 +35,13 @@ const CardModel = () => {
   );
 };
 
-// This is the Eclipse Light component
 const EclipseLight = () => {
     const { scrollYProgress } = useScroll();
-    // The light's intensity and scale grow as the user scrolls
     const intensity = useTransform(scrollYProgress, [0.01, 0.1], [0, 25]);
     const scale = useTransform(scrollYProgress, [0, 0.1], [0.5, 5]);
 
     return (
+        // motion.pointLight for animating the light source.
         <motion.pointLight 
             position={[0, 0, -2]} 
             color="#40E0D0" 
@@ -64,10 +59,7 @@ const Card3D = () => {
         <ambientLight intensity={0.2} />
         <directionalLight position={[5, 5, 5]} intensity={0.5} />
         
-        {/* The 3D model of the card */}
         <CardModel />
-
-        {/* The animated light creating the eclipse effect */}
         <EclipseLight />
 
       </Canvas>
