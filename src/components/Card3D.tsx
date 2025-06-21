@@ -1,27 +1,29 @@
 import React, { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useTexture } from '@react-three/drei';
-import { motion } from 'framer-motion'; 
-import { useTransform } from 'framer-motion';
-import { MotionValue } from 'framer-motion';
+import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
 
-import cardTextureUrl from '../assets/facecard-texture.jpg';
-import { useWindowSize } from '../hooks/useWindowSize';
-
-interface MouseProps {
-  x: MotionValue<number>;
-  y: MotionValue<number>;
-}
-
-interface Card3DProps {
-  scrollYProgress: MotionValue<number>;
-  mouse: MouseProps;
-}
-
-const CardModel = ({ scrollYProgress, mouse }: Card3DProps) => {
+// --- This component is now fully self-contained ---
+const Card3D = () => {
   const meshRef = useRef<THREE.Mesh>(null!);
-  const texture = useTexture(cardTextureUrl);
-  const { width, height } = useWindowSize();
+  const texture = useTexture('/assets/facecard-texture.jpg');
+  
+  // Hooks are now used directly inside the component that needs them
+  const { scrollYProgress } = useScroll();
+  const mouse = {
+    x: useSpring(useMotionValue(0), { stiffness: 100, damping: 30, restDelta: 0.001 }),
+    y: useSpring(useMotionValue(0), { stiffness: 100, damping: 30, restDelta: 0.001 }),
+  };
+
+  // The mouse event handler is also self-contained within the canvas wrapper
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const { clientX, clientY, currentTarget } = e;
+    const { width, height } = currentTarget.getBoundingClientRect();
+    const x = (clientX / width) - 0.5;
+    const y = (clientY / height) - 0.5;
+    mouse.x.set(x);
+    mouse.y.set(y);
+  };
 
   useFrame(() => {
     if (meshRef.current) {
@@ -30,40 +32,30 @@ const CardModel = ({ scrollYProgress, mouse }: Card3DProps) => {
     }
   });
 
+  // Animation logic remains the same, but is now local to this component
   const scale = useTransform(scrollYProgress, [0, 0.1, 0.3, 0.8], [1, 1.2, 1, 1]);
   const rotationX = useTransform(scrollYProgress, [0, 0.1], [0, -Math.PI / 12]);
-  const positionX = useTransform(scrollYProgress, [0.3, 0.8], [0, width > 768 ? width / 4.5 : 0]);
-  const positionY = useTransform(scrollYProgress, [0.3, 0.8], [0, height > 768 ? height / 4.5 : 0]);
-  
-  // --- THIS IS THE FIX ---
-  // The opacity now starts at 1, making the card visible on load.
-  // It fades out at the end of the scroll.
-  const opacity = useTransform(scrollYProgress, [0, 0.8, 0.9], [1, 1, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.25], [1, 1, 0]); // Fade out faster
 
   return (
-    <motion.mesh
-      ref={meshRef}
-      scale={scale}
-      rotation-x={rotationX}
-      position-x={positionX}
-      position-y={positionY}
-      opacity={opacity}
+    <div 
+      onMouseMove={handleMouseMove} 
+      className="w-full h-full"
     >
-      <planeGeometry args={[7.5, 12]} />
-      <meshStandardMaterial map={texture} roughness={0.4} metalness={0.2} transparent />
-    </motion.mesh>
-  );
-};
-
-const Card3D = ({ scrollYProgress, mouse }: Card3DProps) => {
-  return (
-    <div className="w-full h-full">
       <Canvas orthographic camera={{ zoom: 40, position: [0, 0, 100] }}>
         <ambientLight intensity={1.5} />
         <directionalLight position={[10, 10, 10]} intensity={1} />
         <directionalLight position={[-10, -10, 5]} intensity={0.5} color="#40E0D0" />
         
-        <CardModel scrollYProgress={scrollYProgress} mouse={mouse} />
+        <motion.mesh
+          ref={meshRef}
+          scale={scale}
+          rotation-x={rotationX}
+          opacity={opacity}
+        >
+          <planeGeometry args={[7.5, 12]} />
+          <meshStandardMaterial map={texture} roughness={0.4} metalness={0.2} transparent />
+        </motion.mesh>
       </Canvas>
     </div>
   );
