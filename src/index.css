@@ -17,43 +17,6 @@ body {
     0 0 30px rgba(64, 224, 208, 0.2);
 }
 
-.premium-button {
-  @apply w-full py-4 rounded-xl text-black font-semibold flex items-center justify-center space-x-2 transition-all;
-  background: linear-gradient(135deg, #40E0D0 0%, #20B2AA 100%);
-  box-shadow:
-    0 8px 32px rgba(64, 224, 208, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  position: relative;
-  overflow: hidden;
-}
-
-.premium-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
-  transition: left 0.6s ease;
-}
-
-.premium-button:hover::before {
-  left: 100%;
-}
-
-/* --- THIS IS THE CORRECTED BLOCK --- */
-.premium-button:hover {
-  box-shadow:
-    0 12px 40px rgba(64, 224, 208, 0.5),
-    0 0 60px rgba(64, 224, 208, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  /* The transform property is now its own rule with a semicolon */
-  transform: translateY(-3px);
-}
-
-/* --- STYLES FOR THE CONSTELLATION --- */
-
 .constellation-orb {
   @apply w-24 h-24 md:w-32 md:h-32 rounded-full flex items-center justify-center transition-all duration-500 ease-in-out cursor-pointer;
   background: radial-gradient(circle, rgba(10, 10, 10, 0.8) 0%, rgba(10, 10, 10, 0) 70%);
@@ -88,31 +51,34 @@ body {
     background: linear-gradient(90deg, transparent, rgba(64, 224, 208, 0.8), transparent);
 }
 
-.convergence-button {
-  @apply relative inline-block w-auto px-10 py-5 text-lg font-semibold text-white transition-all duration-300 ease-in-out overflow-hidden rounded-2xl;
+/* --- NEW STYLES FOR THE "PORTAL" BUTTON --- */
+.portal-button {
+  @apply fixed bottom-8 right-8 z-50 flex items-center justify-center space-x-3 w-auto px-6 py-4 text-lg font-semibold text-white transition-all duration-300 ease-in-out rounded-full;
   background-color: rgba(64, 224, 208, 0.1);
-  border: 1px solid rgba(64, 224, 208, 0.5);
+  border: 1px solid rgba(64, 224, 208, 0.4);
   backdrop-filter: blur(10px);
+  animation: beacon-pulse 2.5s infinite ease-in-out;
 }
 
-.convergence-button:hover {
+.portal-button:hover {
   background-color: rgba(64, 224, 208, 0.2);
-  border-color: rgba(64, 224, 208, 1);
-  box-shadow: 0 0 40px rgba(64, 224, 208, 0.4);
+  border-color: #40E0D0;
+  box-shadow: 0 0 40px rgba(64, 224, 208, 0.5);
+  transform: scale(1.05); /* Only scale on hover */
+  animation-play-state: paused;
 }
 
-.convergence-button .shine {
-  @apply absolute top-0 -left-full w-full h-full;
-  background: linear-gradient(120deg, transparent, rgba(64, 224, 208, 0.5), transparent);
-  transition: left 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.convergence-button:hover .shine {
-  left: 100%;
-}
-
-.circuit-background {
-  @apply absolute inset-0 z-0 opacity-0;
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2340E0D0' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  transition: opacity 1s ease-in-out;
+@keyframes beacon-pulse {
+  0% {
+    box-shadow: 0 0 15px rgba(64, 224, 208, 0.3);
+    border-color: rgba(64, 224, 208, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 35px rgba(64, 224, 208, 0.6);
+    border-color: rgba(64, 224, 208, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 15px rgba(64, 224, 208, 0.3);
+    border-color: rgba(64, 224, 208, 0.4);
+  }
 }
