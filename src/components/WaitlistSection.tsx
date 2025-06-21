@@ -28,7 +28,6 @@ const portalVariants = {
 const WaitlistSection = () => {
   return (
     <>
-      {/* This is the main content of the final section */}
       <div className="relative z-10 py-32 px-4 flex items-center justify-center min-h-screen">
         <motion.div
           className="max-w-3xl mx-auto text-center space-y-8"
@@ -53,23 +52,23 @@ const WaitlistSection = () => {
 
           <motion.div variants={itemVariants}>
               <p className="text-2xl font-orbitron text-brand-cyan tracking-widest opacity-80">
-                LAUNCHING Q4 2024
+                {/* THIS IS THE UPDATED YEAR */}
+                LAUNCHING 2026
               </p>
           </motion.div>
         </motion.div>
       </div>
 
-      {/* --- This is the new "Portal" Button --- */}
-      {/* It's outside the main div flow and will be fixed to the viewport */}
       <motion.a
-        href="https://praedexa.com/auth?signup=true"
+        // THIS IS THE UPDATED LINK
+        href="https://praedexa.com/auth?signup=true&from=facecard"
         target="_blank"
         rel="noopener noreferrer"
         className="portal-button group"
         variants={portalVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }} // Appears a little sooner
+        viewport={{ once: true, amount: 0.2 }}
       >
         <span>Begin on Praedexa</span>
         <ArrowRight className="w-6 h-6 group-hover:translate-x-1.5 transition-transform" />
