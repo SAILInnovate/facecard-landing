@@ -1,22 +1,23 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { RoundedBox, Points, Point, Environment } from '@react-three/drei';
+import { RoundedBox, Environment } from '@react-three/drei';
 import { MathUtils } from 'three';
-// Import the store's hook to get state
-import { useAppStore } from '../store/appStore';
 
-// --- Monolith Component ---
-const Monolith = () => {
+// This component receives ONLY primitive numbers as props
+interface CardModelProps {
+  rotationY: number;
+  scale: number;
+}
+
+const Monolith = ({ rotationY, scale }: CardModelProps) => {
   const groupRef = useRef<THREE.Group>(null!);
-  // Get the 'scroll' value directly from the global store
-  const scroll = useAppStore((state) => state.scroll);
 
-  useFrame((state, delta) => {
-    if (!groupRef.current) return;
-    const targetRotationY = (1 - Math.min(scroll / 0.15, 1)) * (Math.PI / 2);
-    groupRef.current.rotation.y = MathUtils.lerp(groupRef.current.rotation.y, targetRotationY, delta * 5);
-    const targetScale = 1 + (1 - Math.min(scroll / 0.15, 1)) * 1.5;
-    groupRef.current.scale.set(targetScale, targetScale, targetScale);
+  // We simply apply the calculated values from props
+  useFrame(() => {
+    if (groupRef.current) {
+      groupRef.current.rotation.y = rotationY;
+      groupRef.current.scale.set(scale, scale, scale);
+    }
   });
 
   return (
@@ -28,12 +29,16 @@ const Monolith = () => {
   );
 };
 
-// --- Main 3D Scene Wrapper ---
-const Card3D = () => {
-  const sceneRef = useRef<THREE.Group>(null!);
-  // Get the 'mouse' value directly from the global store
-  const mouse = useAppStore((state) => state.mouse);
+interface Card3DProps {
+  rotationY: number;
+  scale: number;
+  mouse: { x: number; y: number };
+}
 
+const Card3D = ({ rotationY, scale, mouse }: Card3DProps) => {
+  const sceneRef = useRef<THREE.Group>(null!);
+
+  // The mouse parallax is also applied directly from props
   useFrame(() => {
     if (sceneRef.current) {
       sceneRef.current.rotation.y = MathUtils.lerp(sceneRef.current.rotation.y, mouse.x * 0.1, 0.1);
@@ -48,7 +53,7 @@ const Card3D = () => {
         <directionalLight position={[10, 10, 10]} intensity={1} />
         <Environment preset="city" />
         <group ref={sceneRef}>
-          <Monolith />
+          <Monolith rotationY={rotationY} scale={scale} />
         </group>
       </Canvas>
     </div>
