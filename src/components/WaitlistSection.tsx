@@ -20,20 +20,21 @@ const WaitlistSection = () => {
           </p>
 
           <div className="flex justify-center">
-            {/* Updated Link to go directly to signup */}
-            <a 
+            <motion.a 
               href="https://praedexa.com/auth?signup=true" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="premium-button group inline-block w-auto px-10 py-5 text-lg"
+              className="premium-button group inline-block w-auto px-10 py-5 text-lg focus:outline-none focus:ring-2 focus:ring-brand-cyan focus:ring-offset-2"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               <span>Sign Up on Praedexa</span>
               <ArrowRight className="w-6 h-6 group-hover:translate-x-1.5 transition-transform" />
-            </a>
+            </motion.a>
           </div>
 
           <div className="mt-16">
-            <p className="text-2xl font-orbitron text-brand-cyan tracking-widest">
+            <p className="text-2xl font-orbitron text-brand-cyan tracking-widest bg-gray-800 py-2 px-6 rounded-full inline-block">
               LAUNCHING Q4 2024
             </p>
           </div>
