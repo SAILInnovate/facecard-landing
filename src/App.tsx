@@ -5,6 +5,7 @@ import PrinciplesSection from './components/PrinciplesSection';
 import WaitlistSection from './components/WaitlistSection';
 
 const Starfield = () => (
+  // z-0 puts it at the very back
   <div className="fixed inset-0 z-0">
     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-[0.03] animate-starfield"></div>
   </div>
@@ -27,6 +28,7 @@ function App() {
     mouse.y.set(y);
   };
 
+  // --- Animation Logic for all components ---
   const heroOpacity = useTransform(scrollYProgress, [0, 0.1, 0.2], [1, 1, 0]);
   const heroY = useTransform(scrollYProgress, [0, 0.2], [0, -100]);
   
@@ -49,30 +51,33 @@ function App() {
     >
       <Starfield />
       
-      {/* --- FIXED HERO SECTION (z-10) --- */}
-      {/* This layer holds the background, the card, AND the hero text. It will be covered by the scrolling content. */}
+      {/* --- LAYER 1: Background (z-0) --- */}
       <motion.div 
-        className="fixed top-0 left-0 w-full h-screen pointer-events-none z-10"
+        className="fixed inset-0 z-0"
+        style={{ background: backgroundGradient }}
+      />
+      
+      {/* --- LAYER 2: 3D Card (z-10) --- */}
+      {/* This layer is separate now, sitting on top of the background. */}
+      <div className="fixed inset-0 pointer-events-none z-10">
+        <Card3D scrollYProgress={scrollYProgress} mouse={mouse} />
+      </div>
+
+      {/* --- LAYER 3: Hero Text (z-20) --- */}
+      {/* Sits on top of the card. */}
+      <motion.div 
+        className="fixed inset-0 pointer-events-none z-20"
         style={{ opacity: heroOpacity, y: heroY }}
       >
-        <motion.div 
-          className="absolute inset-0"
-          style={{ background: backgroundGradient }}
-        />
-        
-        {/* The 3D Card */}
-        <Card3D scrollYProgress={scrollYProgress} mouse={mouse} />
-
-        {/* The Hero Text */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+        <div className="flex flex-col items-center justify-center text-center h-full">
             <h1 className="text-5xl md:text-8xl font-orbitron font-black text-white subtle-glow">FaceCard</h1>
             <h2 className="text-xl md:text-3xl font-bold text-white mt-4">The New Standard in Credit.</h2>
         </div>
       </motion.div>
 
-      {/* --- SCROLLING CONTENT SECTION (z-20) --- */}
-      {/* This layer sits ON TOP of the hero section and scrolls over it. */}
-      <div className="relative z-20">
+      {/* --- LAYER 4: Scrolling Content (z-30) --- */}
+      {/* Sits on top of everything else. */}
+      <div className="relative z-30">
         <div className="h-[120vh]" />
         
         <motion.div style={{ opacity: principlesOpacity, y: principlesY }}>
