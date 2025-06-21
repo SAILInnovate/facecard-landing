@@ -42,14 +42,17 @@ body {
   left: 100%;
 }
 
+/* --- THIS IS THE CORRECTED BLOCK --- */
 .premium-button:hover {
   box-shadow:
     0 12px 40px rgba(64, 224, 208, 0.5),
     0 0 60px rgba(64, 224, 208, 0.3),
-    transform: translateY(-3px);
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  /* The transform property is now its own rule with a semicolon */
+  transform: translateY(-3px);
 }
 
-/* --- NEW STYLES FOR THE CONSTELLATION --- */
+/* --- STYLES FOR THE CONSTELLATION --- */
 
 .constellation-orb {
   @apply w-24 h-24 md:w-32 md:h-32 rounded-full flex items-center justify-center transition-all duration-500 ease-in-out cursor-pointer;
