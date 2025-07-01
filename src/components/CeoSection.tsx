@@ -3,8 +3,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-// --- NEW LOCAL IMAGE PATH ---
-// The path starts with a '/' which points to your 'public' folder.
 const ceoImageUrl = '/images/alonzo-avera.jpg';
 
 const itemVariants = {
@@ -19,14 +17,14 @@ const itemVariants = {
 const CeoSection: React.FC = () => {
   return (
     <motion.div 
-      className="container mx-auto px-6 py-20"
+      className="container mx-auto px-6"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       transition={{ staggerChildren: 0.2 }}
     >
       <motion.h2 
-        className="text-5xl md:text-7xl font-orbitron font-bold text-white subtle-glow text-center mb-16"
+        className="text-5xl md:text-7xl font-orbitron font-bold text-white subtle-glow text-center mb-12 md:mb-16"
         variants={itemVariants}
       >
         Meet the Visionary
@@ -35,14 +33,11 @@ const CeoSection: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-start">
         {/* Left side: Image and Bio */}
         <motion.div className="lg:col-span-2 space-y-8" variants={itemVariants}>
-          {/* --- THIS IS THE ONLY PART THAT CHANGES --- */}
           <img 
             src={ceoImageUrl} 
             alt="Alonzo Avera, CEO of FaceCard" 
             className="w-full h-auto object-cover rounded-2xl shadow-lg border-2 border-cyan-500/20"
           />
-          {/* --- END OF CHANGE --- */}
-
           <div className="space-y-4">
             <h3 className="text-3xl font-orbitron font-bold text-white">Alonzo Avera</h3>
             <p className="text-lg text-brand-cyan font-semibold">Founder & CEO, Community Builder, Visionary</p>
@@ -67,7 +62,8 @@ const CeoSection: React.FC = () => {
             <p className="text-gray-300 leading-relaxed">
                 Have a question or a proposal? Connect directly with Alonzo to discuss how we can build the future of creative finance together.
             </p>
-            <div className="w-full h-[750px] bg-gray-800/50 rounded-2xl overflow-hidden border border-cyan-500/20 backdrop-blur-sm shadow-2xl">
+            {/* --- RESPONSIVE HEIGHT FOR IFRAME --- */}
+            <div className="w-full h-[650px] md:h-[750px] bg-gray-800/50 rounded-2xl overflow-hidden border border-cyan-500/20 backdrop-blur-sm shadow-2xl">
                 <iframe
                     src="https://link.coachfoundation.com/widget/booking/9fOQoS1l8jr6pzOJE0OG"
                     style={{ width: '100%', height: '100%', border: 'none' }}
