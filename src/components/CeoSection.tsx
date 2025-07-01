@@ -62,14 +62,19 @@ const CeoSection: React.FC = () => {
             <p className="text-gray-300 leading-relaxed">
                 Have a question or a proposal? Connect directly with Alonzo to discuss how we can build the future of creative finance together.
             </p>
-            {/* --- THIS IS THE LINE TO CHANGE --- */}
-            {/* Set a single, taller height that fits the entire booking form */}
-            <div className="w-full h-[950px] bg-gray-800/50 rounded-2xl overflow-hidden border border-cyan-500/20 backdrop-blur-sm shadow-2xl">
+            
+            {/* 
+              This container sets a max-height. The iframe inside can now scroll.
+              We're using a height of 80vh (80% of the viewport height) for better responsiveness.
+            */}
+            <div className="w-full h-[80vh] max-h-[900px] bg-gray-800/50 rounded-2xl overflow-hidden border border-cyan-500/20 backdrop-blur-sm shadow-2xl">
                 <iframe
                     src="https://link.coachfoundation.com/widget/booking/9fOQoS1l8jr6pzOJE0OG"
                     style={{ width: '100%', height: '100%', border: 'none' }}
                     title="Booking Widget for Alonzo Avera"
-                    scrolling="no"
+                    // --- THIS IS THE CRITICAL FIX ---
+                    // This allows the iframe to have its own scrollbar if the content is too tall.
+                    scrolling="yes" 
                 ></iframe>
             </div>
         </motion.div>
