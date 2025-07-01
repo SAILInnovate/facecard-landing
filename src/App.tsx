@@ -5,7 +5,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import Card3D from './components/Card3D';
 import PrinciplesSection from './components/PrinciplesSection';
 import WaitlistSection from './components/WaitlistSection';
-import CeoSection from './components/CeoSection'; // Import the new .tsx component
+import CeoSection from './components/CeoSection';
 
 const Starfield = () => (
   <div className="fixed inset-0 z-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-[0.03] animate-starfield"></div>
@@ -21,21 +21,9 @@ function App() {
     });
   }, [scrollYProgress]);
 
-  // --- UPDATED ANIMATION LOGIC FOR TSX ---
+  // --- SIMPLIFIED ANIMATION LOGIC ---
+  // We only need animations for the fixed hero elements now.
   const heroOpacity = useTransform(scrollYProgress, [0, 0.08], [1, 0]);
-  
-  // Principles section fades in and out
-  const principlesOpacity = useTransform(scrollYProgress, [0.25, 0.35, 0.45, 0.55], [0, 1, 1, 0]);
-  const principlesY = useTransform(scrollYProgress, [0.25, 0.35], [100, 0]);
-  
-  // CEO Section fades in and out
-  const ceoOpacity = useTransform(scrollYProgress, [0.5, 0.6, 0.7, 0.8], [0, 1, 1, 0]);
-  const ceoY = useTransform(scrollYProgress, [0.5, 0.6], [100, 0]);
-
-  // Waitlist section fades in at the end
-  const waitlistOpacity = useTransform(scrollYProgress, [0.75, 0.85], [0, 1]);
-  const waitlistY = useTransform(scrollYProgress, [0.75, 0.85], [100, 0]);
-
   const backgroundGradient = useTransform(
     scrollYProgress,
     [0, 0.3],
@@ -44,6 +32,7 @@ function App() {
 
   return (
     <main className="relative bg-brand-dark">
+      {/* This container for the 3D card and hero text remains fixed */}
       <div className="fixed top-0 left-0 w-full h-screen pointer-events-none z-10">
         <motion.div 
           className="absolute inset-0"
@@ -60,27 +49,29 @@ function App() {
         </motion.div>
       </div>
 
+      {/* --- REVISED PAGE CONTENT STRUCTURE --- */}
       <div className="relative z-20">
-        {/* Increased spacer height to accommodate the new section and ensure smooth transitions */}
-        <section className="h-[200vh]" /> 
+        {/* 
+          This spacer pushes the content down below the initial hero view.
+          120vh gives a little extra room before the first section appears.
+        */}
+        <section className="h-[120vh]" />
 
-        <section className="relative min-h-screen py-20 flex items-center">
-          <motion.div className="w-full" style={{ opacity: principlesOpacity, y: principlesY }}>
-            <PrinciplesSection />
-          </motion.div>
+        {/* 
+          Each section is now a simple container. The component inside
+          (e.g., <PrinciplesSection />) will handle its own "whileInView" animation.
+          This makes the layout much more robust and mobile-friendly.
+        */}
+        <section className="relative py-20 min-h-screen flex items-center">
+          <PrinciplesSection />
         </section>
 
-        {/* --- NEW CEO SECTION ADDED HERE --- */}
-        <section className="relative min-h-screen py-20 flex items-center">
-          <motion.div className="w-full" style={{ opacity: ceoOpacity, y: ceoY }}>
-            <CeoSection />
-          </motion.div>
+        <section className="relative py-20 min-h-screen flex items-center">
+          <CeoSection />
         </section>
 
-        <section className="relative h-screen flex items-center justify-center">
-          <motion.div style={{ opacity: waitlistOpacity, y: waitlistY }}>
-            <WaitlistSection />
-          </motion.div>
+        <section className="relative py-20 min-h-screen flex items-center justify-center">
+          <WaitlistSection />
         </section>
       </div>
     </main>
