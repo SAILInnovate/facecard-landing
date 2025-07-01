@@ -62,8 +62,9 @@ const CeoSection: React.FC = () => {
             <p className="text-gray-300 leading-relaxed">
                 Have a question or a proposal? Connect directly with Alonzo to discuss how we can build the future of creative finance together.
             </p>
-            {/* --- RESPONSIVE HEIGHT FOR IFRAME --- */}
-            <div className="w-full h-[650px] md:h-[750px] bg-gray-800/50 rounded-2xl overflow-hidden border border-cyan-500/20 backdrop-blur-sm shadow-2xl">
+            {/* --- THIS IS THE LINE TO CHANGE --- */}
+            {/* Set a single, taller height that fits the entire booking form */}
+            <div className="w-full h-[950px] bg-gray-800/50 rounded-2xl overflow-hidden border border-cyan-500/20 backdrop-blur-sm shadow-2xl">
                 <iframe
                     src="https://link.coachfoundation.com/widget/booking/9fOQoS1l8jr6pzOJE0OG"
                     style={{ width: '100%', height: '100%', border: 'none' }}
