@@ -21,8 +21,6 @@ function App() {
     });
   }, [scrollYProgress]);
 
-  // --- SIMPLIFIED ANIMATION LOGIC ---
-  // We only need animations for the fixed hero elements now.
   const heroOpacity = useTransform(scrollYProgress, [0, 0.08], [1, 0]);
   const backgroundGradient = useTransform(
     scrollYProgress,
@@ -32,7 +30,6 @@ function App() {
 
   return (
     <main className="relative bg-brand-dark">
-      {/* This container for the 3D card and hero text remains fixed */}
       <div className="fixed top-0 left-0 w-full h-screen pointer-events-none z-10">
         <motion.div 
           className="absolute inset-0"
@@ -51,26 +48,23 @@ function App() {
 
       {/* --- REVISED PAGE CONTENT STRUCTURE --- */}
       <div className="relative z-20">
-        {/* 
-          This spacer pushes the content down below the initial hero view.
-          120vh gives a little extra room before the first section appears.
-        */}
-        <section className="h-[120vh]" />
+        {/* This spacer just pushes content below the hero */}
+        <div className="h-[100vh]" />
 
         {/* 
-          Each section is now a simple container. The component inside
-          (e.g., <PrinciplesSection />) will handle its own "whileInView" animation.
-          This makes the layout much more robust and mobile-friendly.
+          REMOVED: `min-h-screen flex items-center` 
+          ADDED: Responsive padding `py-16 md:py-24`
+          This makes the sections stack naturally.
         */}
-        <section className="relative py-20 min-h-screen flex items-center">
+        <section className="relative py-16 md:py-24">
           <PrinciplesSection />
         </section>
 
-        <section className="relative py-20 min-h-screen flex items-center">
+        <section className="relative py-16 md:py-24">
           <CeoSection />
         </section>
 
-        <section className="relative py-20 min-h-screen flex items-center justify-center">
+        <section className="relative py-16 md:py-24">
           <WaitlistSection />
         </section>
       </div>
