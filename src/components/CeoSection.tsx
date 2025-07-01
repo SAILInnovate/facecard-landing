@@ -3,8 +3,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-// The original image provided in the prompt is used here.
-const ceoImageUrl = 'https://imgur.com/a/OwoeA6C';
+// --- NEW LOCAL IMAGE PATH ---
+// The path starts with a '/' which points to your 'public' folder.
+const ceoImageUrl = '/images/alonzo-avera.jpg';
 
 const itemVariants = {
   hidden: { opacity: 0, y: 30 },
@@ -34,11 +35,14 @@ const CeoSection: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-start">
         {/* Left side: Image and Bio */}
         <motion.div className="lg:col-span-2 space-y-8" variants={itemVariants}>
+          {/* --- THIS IS THE ONLY PART THAT CHANGES --- */}
           <img 
             src={ceoImageUrl} 
             alt="Alonzo Avera, CEO of FaceCard" 
             className="w-full h-auto object-cover rounded-2xl shadow-lg border-2 border-cyan-500/20"
           />
+          {/* --- END OF CHANGE --- */}
+
           <div className="space-y-4">
             <h3 className="text-3xl font-orbitron font-bold text-white">Alonzo Avera</h3>
             <p className="text-lg text-brand-cyan font-semibold">Founder & CEO, Community Builder, Visionary</p>
