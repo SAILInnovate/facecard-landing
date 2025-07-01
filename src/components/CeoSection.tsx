@@ -47,8 +47,9 @@ const CeoSection: React.FC = () => {
             <p className="text-gray-300 leading-relaxed">
               His journey began when he tried to secure a business loan for his record label, <strong>4mBrothers</strong>. The process was nearly impossible. As a creative, he found himself lost in the complex world of business structures and finance—a world where essential information on credit was gatekept and hard to come by.
             </p>
+            {/* --- THIS PARAGRAPH HAS BEEN CORRECTED --- */}
             <p className="text-gray-300 leading-relaxed">
-              Through sheer persistence, Alonzo successfully obtained his initial investment using credit banking. This hard-won victory inspired him to create Facecard: a US-based fast track to funding, designed to save creators time and empower them to focus on their art, craft, and business models.
+              Through sheer persistence, Alonzo successfully obtained his initial investment using credit banking. This hard-won victory inspired him to create Facecard: a US-based fast track to funding, designed to save creators time and empower them to focus on **his or her** art, craft, and business models.
             </p>
             <p className="text-gray-400 text-sm italic">
                 Note: Facecard is a US-based entity and operates separately from international partners like Praedexa.
@@ -63,17 +64,11 @@ const CeoSection: React.FC = () => {
                 Have a question or a proposal? Connect directly with Alonzo to discuss how we can build the future of creative finance together.
             </p>
             
-            {/* 
-              This container sets a max-height. The iframe inside can now scroll.
-              We're using a height of 80vh (80% of the viewport height) for better responsiveness.
-            */}
             <div className="w-full h-[80vh] max-h-[900px] bg-gray-800/50 rounded-2xl overflow-hidden border border-cyan-500/20 backdrop-blur-sm shadow-2xl">
                 <iframe
                     src="https://link.coachfoundation.com/widget/booking/9fOQoS1l8jr6pzOJE0OG"
                     style={{ width: '100%', height: '100%', border: 'none' }}
                     title="Booking Widget for Alonzo Avera"
-                    // --- THIS IS THE CRITICAL FIX ---
-                    // This allows the iframe to have its own scrollbar if the content is too tall.
                     scrolling="yes" 
                 ></iframe>
             </div>
