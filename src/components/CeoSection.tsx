@@ -49,7 +49,7 @@ const CeoSection: React.FC = () => {
             </p>
             {/* --- THIS PARAGRAPH HAS BEEN CORRECTED --- */}
             <p className="text-gray-300 leading-relaxed">
-              Through sheer persistence, Alonzo successfully obtained his initial investment using credit banking. This hard-won victory inspired him to create Facecard: a US-based fast track to funding, designed to save creators time and empower them to focus on **his or her** art, craft, and business models.
+              Through sheer persistence, Alonzo successfully obtained his initial investment using credit banking. This hard-won victory inspired him to create Facecard: a US-based fast track to funding, designed to save creators time and empower them to focus on their art, craft, and business models.
             </p>
             <p className="text-gray-400 text-sm italic">
                 Note: Facecard is a US-based entity and operates separately from international partners like Praedexa.
