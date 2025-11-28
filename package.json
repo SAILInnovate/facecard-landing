@@ -12,10 +12,14 @@
   "dependencies": {
     "@react-three/drei": "^9.122.0",
     "@react-three/fiber": "^8.18.0",
+    "@react-three/postprocessing": "^2.16.0",
+    "@types/three": "^0.150.1",
     "framer-motion": "^11.18.2",
     "lucide-react": "^0.519.0",
+    "postprocessing": "^6.33.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "three": "^0.150.1",
     "zustand": "^5.0.5"
   },
   "devDependencies": {

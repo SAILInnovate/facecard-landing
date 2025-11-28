@@ -1,86 +1,66 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { GatewayNode } from './icons/GatewayNode';
-import { GrowthMatrix } from './icons/GrowthMatrix';
-import { TrustNexus } from './icons/TrustNexus';
+import { ShieldCheck, TrendingUp, Users } from 'lucide-react';
 
 const principles = [
   {
-    Icon: GatewayNode,
-    headline: "Access, Redefined",
-    description: "We're replacing outdated credit checks with a system built on trust, providing a real pathway to a strong credit history.",
+    icon: ShieldCheck,
+    title: "Stewardship",
+    desc: "Financial salvation rooted in faith and responsible management.",
+    color: "from-cyan-400 to-blue-500"
   },
   {
-    Icon: GrowthMatrix,
-    headline: "Intelligence, Rewarded",
-    description: "Master your finances with interactive simulations. Every step you take to improve your financial literacy earns you real rewards.",
+    icon: TrendingUp,
+    title: "Intelligence",
+    desc: "Rewards for learning. Risk-free simulations. Real growth.",
+    color: "from-emerald-400 to-teal-500"
   },
   {
-    Icon: TrustNexus,
-    headline: "Community, at the Core",
-    description: "Connect with a network that champions your success, all within a transparent, ethical framework with no hidden fees.",
+    icon: Users,
+    title: "Community",
+    desc: "A network that celebrates your journey, not just your score.",
+    color: "from-purple-400 to-pink-500"
   }
 ];
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 50 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      delay: i * 0.2,
-      duration: 0.8,
-      ease: 'easeOut',
-    },
-  }),
-};
-
 const PrinciplesSection = () => {
   return (
-    <div className="relative z-10 py-32 px-4">
-      <div className="max-w-7xl mx-auto">
-        <motion.div 
-          className="text-center mb-20"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.5 }}
-          transition={{ duration: 0.8 }}
-        >
-          <h2 className="text-4xl md:text-6xl font-orbitron font-bold text-white subtle-glow">
-            Built for a Fairer Financial Future
-          </h2>
-          <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mt-6 leading-relaxed">
-            Three foundational principles that redefine how credit should work.
-          </p>
-        </motion.div>
-        
-        <div className="grid lg:grid-cols-3 gap-10">
-          {principles.map((principle, index) => (
-            <motion.div
-              key={index}
-              className="bg-gray-900/40 backdrop-blur-sm border border-gray-700/50 rounded-3xl p-8 text-center"
-              custom={index}
-              variants={cardVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.3 }}
-            >
-              <div className="flex justify-center mb-6">
-                <div className="w-20 h-20 bg-gray-800 rounded-2xl flex items-center justify-center border border-gray-700">
-                  <principle.Icon className="w-10 h-10 text-brand-cyan" />
-                </div>
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-4">
-                {principle.headline}
-              </h3>
-              <p className="text-gray-400 leading-relaxed">
-                {principle.description}
-              </p>
-            </motion.div>
-          ))}
-        </div>
+    <section className="py-20">
+      <div className="mb-16 text-center">
+        <h2 className="text-4xl md:text-5xl font-orbitron font-bold text-white mb-4">Core Principles</h2>
+        <div className="h-1 w-24 bg-gradient-to-r from-cyan-500 to-transparent mx-auto rounded-full" />
       </div>
-    </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {principles.map((p, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.2 }}
+            viewport={{ once: true }}
+            className="group relative p-1 rounded-2xl bg-gradient-to-b from-white/10 to-transparent hover:from-cyan-500/50 transition-all duration-500"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+            
+            <div className="h-full bg-[#0a0a0a] rounded-xl p-8 border border-white/5 relative overflow-hidden group-hover:border-white/20 transition-colors">
+              <div className={`w-14 h-14 rounded-lg bg-gradient-to-br ${p.color} p-0.5 mb-6`}>
+                 <div className="w-full h-full bg-black rounded-[7px] flex items-center justify-center">
+                    <p.icon className="w-7 h-7 text-white" />
+                 </div>
+              </div>
+              
+              <h3 className="text-2xl font-orbitron font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors">
+                {p.title}
+              </h3>
+              <p className="text-gray-400 leading-relaxed group-hover:text-gray-200 transition-colors">
+                {p.desc}
+              </p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </section>
   );
 };
 
